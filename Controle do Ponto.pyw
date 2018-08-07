@@ -130,13 +130,10 @@ root = Tk()
 app = Application(root)
 root.bind('<Return>', app.getOutTime)
 root.title("Controle de Ponto")
+try:
+    root.call('wm', 'iconphoto', root._w, PhotoImage(file='favicon/time2.PNG'))
+except:
+    pass
 root.minsize(250,250)
 root.maxsize(250,300)
 root.mainloop()
-
-
-
-
-# text.configure(state='normal')
-# text.insert('end', 'Some Text')
-# text.configure(state='disabled')
