@@ -46,6 +46,14 @@ class Application:
         self.enterMinute["width"] = 2
         self.enterMinute["font"] = self.stdfont
         self.enterMinute.pack(side=LEFT, padx = 5)
+
+        self.fixButtom = Button(self.Container02, bg="#C35858")
+        self.lock = 0;
+        self.fixButtom["text"] = " "
+        self.fixButtom["font"] = ("Calibri", "5")
+        self.fixButtom["width"] = 1
+        self.fixButtom["command"] = self.fixEntry
+        self.fixButtom.pack(side=LEFT, padx = (5,0))
   
         self.exitTimeLaber = Label(self.Container03, text="Hora de Saída   ", font=self.stdfont)
         self.exitTimeLaber.pack(side=LEFT, padx = (0,10))
@@ -61,7 +69,7 @@ class Application:
         self.outMinute = Entry(self.Container03)
         self.outMinute["width"] = 2
         self.outMinute["font"] = self.stdfont
-        self.outMinute.pack(side=LEFT, padx = 5, pady = 10)
+        self.outMinute.pack(side=LEFT, padx = (5,22), pady = 10)
 
         self.SendButtom = Button(self.Container04)
         self.SendButtom["text"] = "Ok"
@@ -114,17 +122,29 @@ class Application:
         endMinute = endTime%60
         endHour = int(endTime/60) % 24
 
+        endMinute = str(endMinute) if endMinute > 9 else "0"+str(endMinute)
+        endHour = str(endHour) if endHour > 9 else "0"+str(endHour)
+
         self.outHour.configure(state = 'normal')
         self.outMinute.configure(state = 'normal')
 
         self.outHour.delete(0,END)
-        self.outHour.insert(0, str(endHour))
+        self.outHour.insert(0, endHour)
         
         self.outMinute.delete(0,END)
-        self.outMinute.insert(0, str(endMinute))
+        self.outMinute.insert(0, endMinute)
   
         self.outHour.configure(state = 'disabled')
         self.outMinute.configure(state = 'disabled')
+    def fixEntry(self, *args):
+        if(self.lock == 0):
+            self.enterHour.configure(state = 'disabled')
+            self.enterMinute.configure(state = 'disabled')
+            self.lock = 1
+        else:
+            self.enterHour.configure(state = 'normal')
+            self.enterMinute.configure(state = 'normal')
+            self.lock = 0
 
 root = Tk()
 app = Application(root)
