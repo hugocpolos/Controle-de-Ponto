@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 try:
     from Tkinter import *
 except ImportError:
@@ -47,7 +47,7 @@ class Application:
         self.enterMinute["font"] = self.stdfont
         self.enterMinute.pack(side=LEFT, padx = 5)
 
-        self.fixButtom = Button(self.Container02, bg="#C35858")
+        self.fixButtom = Button(self.Container02, bg="#4286f4")
         self.lock = 0;
         self.fixButtom["text"] = " "
         self.fixButtom["font"] = ("Calibri", "5")
