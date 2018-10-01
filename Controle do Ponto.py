@@ -1,4 +1,7 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+import Ponto_tray
+import _thread
+import time
 try:
     from Tkinter import *
 except ImportError:
@@ -54,7 +57,7 @@ class Application:
         self.fixButtom["text"] = " "
         self.fixButtom["font"] = ("Calibri", "5")
         self.fixButtom["width"] = 1
-        self.fixButtom["command"] = self.fixEntry
+        self.fixButtom["command"] = self.lockInput
         self.fixButtom.pack(side=LEFT, padx=(5, 0))
 
         self.exitTimeLaber = Label(
@@ -122,25 +125,27 @@ class Application:
         initTime = hour * 60 + minute
         endTime = initTime + duration
 
-        endMinute = endTime % 60
-        endHour = int(endTime / 60) % 24
+        self.endMinute = endTime % 60
+        self.endHour = int(endTime / 60) % 24
 
-        endMinute = str(endMinute) if endMinute > 9 else "0" + str(endMinute)
-        endHour = str(endHour) if endHour > 9 else "0" + str(endHour)
+        self.endMinute = str(
+            self.endMinute) if self.endMinute > 9 else "0" + str(self.endMinute)
+        self.endHour = str(
+            self.endHour) if self.endHour > 9 else "0" + str(self.endHour)
 
         self.outHour.configure(state='normal')
         self.outMinute.configure(state='normal')
 
         self.outHour.delete(0, END)
-        self.outHour.insert(0, endHour)
+        self.outHour.insert(0, self.endHour)
 
         self.outMinute.delete(0, END)
-        self.outMinute.insert(0, endMinute)
+        self.outMinute.insert(0, self.endMinute)
 
         self.outHour.configure(state='disabled')
         self.outMinute.configure(state='disabled')
 
-    def fixEntry(self, *args):
+    def lockInput(self, *args):
         if(self.lock == 0):
             self.enterHour.configure(state='disabled')
             self.enterMinute.configure(state='disabled')
@@ -149,6 +154,15 @@ class Application:
             self.enterHour.configure(state='normal')
             self.enterMinute.configure(state='normal')
             self.lock = 0
+
+    def notify_scheduler(self, minute):
+        time.sleep(int(minute * 60) - 10)
+        try:
+            Ponto_tray.balloon_tip(
+                "Controle do Ponto", "Não esqueça de bater o ponto. \
+            \n Você deve sair as " + self.endHour + ":" + self.endMinute)
+        except:
+            pass
 
 
 root = Tk()
@@ -161,4 +175,5 @@ except OSError:
     pass
 root.minsize(250, 140)
 root.maxsize(250, 300)
+_thread.start_new_thread(app.notify_scheduler, (0.15,))
 root.mainloop()
